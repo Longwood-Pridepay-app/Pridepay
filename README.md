@@ -1,10 +1,14 @@
-# Welcome to your new ignited app!
+# Welcome to Pridepay! 
+Created for Longwood Central School District and by Longwood Students!
 
-[![CircleCI](https://circleci.com/gh/infinitered/ignite.svg?style=svg)](https://circleci.com/gh/infinitered/ignite)
+Created by Hussain Iqbal and Jadon (idk ur last Name)
 
-## The latest and greatest boilerplate for Infinite Red opinions
+This app is essentially a digitalization of the currency system BR3 in Longwood Central School district. It allows for teacher and students to send and recieve BR3 bucks with ease. It even allows for purchases through the school store!
 
-This is the boilerplate that [Infinite Red](https://infinite.red) uses as a way to test bleeding-edge changes to our React Native stack.
+
+## Current application Layout
+
+The app currently is built off of the template by [Ignite](https://github.com/infinitered/ignite) and [Native Base](https://nativebase.io/)
 
 Currently includes:
 
@@ -16,7 +20,7 @@ Currently includes:
 
 ## Quick Start
 
-The Ignite boilerplate project's structure will look similar to this:
+The project's structure will look similar to this:
 
 ```
 ignite-project
@@ -66,7 +70,7 @@ ignite-project
 
 ### ./app directory
 
-Included in an Ignite boilerplate project is the `app` directory. This is a directory you would normally have to create when using vanilla React Native.
+Included in the boilerplate project is the `app` directory. This is a directory you would normally have to create when using vanilla React Native.(otherwise labelled as `src`)
 
 The inside of the `app` directory looks similar to the following:
 
@@ -120,11 +124,11 @@ This directory will hold your Jest configs and mocks.
 
 ## Running Maestro end-to-end tests
 
-Follow our [Maestro Setup](https://ignitecookbook.com/docs/recipes/MaestroSetup) recipe from the [Ignite Cookbook](https://ignitecookbook.com/)!
+Follow [Maestro Setup](https://ignitecookbook.com/docs/recipes/MaestroSetup) recipe from the [Ignite Cookbook](https://ignitecookbook.com/)!
 
-## Previous Boilerplates
+## Development
 
-- [2018 aka Bowser](https://github.com/infinitered/ignite-bowser)
-- [2017 aka Andross](https://github.com/infinitered/ignite-andross)
-- [2016 aka Ignite 1.0](https://github.com/infinitered/ignite-ir-boilerplate-2016)
+Make sure when you start up a new development environment or pull, to run  `npm i`
+To run the application for testing, run `npm run` and a list will pop up. Choose from there to run the app for the OS that you desire'
 
+The app is currently using [Firebase](https://console.firebase.google.com/u/0/) for database and [Google OAuth](https://console.cloud.google.com/getting-started?project=pridepay-384911&supportedpurview=project) for authentication/sign in.
