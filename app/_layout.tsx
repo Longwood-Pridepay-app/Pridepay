@@ -16,7 +16,7 @@ export default function HomeLayout() {
             <Stack.Screen
                 name="index"
                 options={{
-                    title: "Welcome",
+                    title: "Pridepay",
                 }}
             />
         </Stack>
