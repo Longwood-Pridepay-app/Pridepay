@@ -9,8 +9,24 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         width: '100%',
     },
+    LoginScreenText: {
+        flex: 1,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: "center",
+    },
+    svgtest:{
+        position: 'absolute',
+        zIndex: -1,
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     containerTest:{
-
+        fontSize: 32,
+        fontFamily: 'System',
+        fontWeight: 'bold',
+        color: "#B4A468"
     },
     topHalf: {
         flex: 1,

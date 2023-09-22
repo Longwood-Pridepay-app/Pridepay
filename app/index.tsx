@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack, useRouter } from "expo-router";
-import {Button, View} from "react-native";
+import {Button, Text, View} from "react-native";
 import styles from "../components/styles";
 import LoginBanner from "../assets/LoginBanner.svg"
 
@@ -11,6 +11,7 @@ const WelcomeScreen = () => {
         <View style={styles.container}>
             <Stack.Screen
                 options={{
+                    headerShown: false, // Hide the header
                     title: "Pridepay",
                     headerStyle: {
                         backgroundColor: "#0C4531",
@@ -25,14 +26,17 @@ const WelcomeScreen = () => {
                 }}
             />
             {/* The first half of the screen with the same color as the top bar */}
-            <LoginBanner width={"100%"} height={'60%'} preserveAspectRatio={"none"}></LoginBanner>
+            <LoginBanner style={styles.svgtest} width={"100%"} height={'60%'} preserveAspectRatio={"none"}></LoginBanner>
+            <View style={styles.LoginScreenText}>
+                <Text style={styles.containerTest}>PridePay</Text>
+                <Button
+                    title="Navigate to Student_Page"
+                    onPress={() => {
+                        navigation.push("student/Student_Page");
+                    }}
+                />
+            </View>
             {/* The second half of the screen in white */}
-            <Button
-                title="Navigate to Student_Page"
-                onPress={() => {
-                    navigation.push("student/Student_Page");
-                }}
-            />
         </View>
     );
 };
