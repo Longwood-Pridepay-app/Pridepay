@@ -1,8 +1,8 @@
 import React from 'react';
 import { Stack, useRouter } from "expo-router";
-import { StyleSheet, View } from "react-native";
-import Svg, { Path } from 'react-native-svg';
+import {Button, View} from "react-native";
 import styles from "../components/styles";
+import LoginBanner from "../assets/LoginBanner.svg"
 
 const WelcomeScreen = () => {
     const navigation = useRouter();
@@ -20,13 +20,19 @@ const WelcomeScreen = () => {
                         fontSize: 32,
                         fontFamily: 'System',
                         fontWeight: 'bold',
-                        marginTop: 10, // Add marginTop to create padding above the title
+                        // marginTop: 10, // Add marginTop to create padding above the title
                     },
                 }}
             />
             {/* The first half of the screen with the same color as the top bar */}
-            <View style={styles.topHalf}></View>
+            <LoginBanner width={"100%"} ></LoginBanner>
             {/* The second half of the screen in white */}
+            <Button
+                title="Navigate to Student_Page"
+                onPress={() => {
+                    navigation.push("student/Student_Page");
+                }}
+            />
             <View style={styles.bottomHalf}></View>
         </View>
     );

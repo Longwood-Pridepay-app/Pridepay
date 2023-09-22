@@ -7,8 +7,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
+        width: '100%',
     },
+    containerTest:{
 
+    },
     topHalf: {
         flex: 1,
         backgroundColor: "#0C4531", // Set the background color of the top half
