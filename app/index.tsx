@@ -25,7 +25,7 @@ const WelcomeScreen = () => {
                 }}
             />
             {/* The first half of the screen with the same color as the top bar */}
-            <LoginBanner width={"100%"} ></LoginBanner>
+            <LoginBanner width={"100%"} height={'60%'} preserveAspectRatio={"none"}></LoginBanner>
             {/* The second half of the screen in white */}
             <Button
                 title="Navigate to Student_Page"
@@ -33,7 +33,6 @@ const WelcomeScreen = () => {
                     navigation.push("student/Student_Page");
                 }}
             />
-            <View style={styles.bottomHalf}></View>
         </View>
     );
 };
