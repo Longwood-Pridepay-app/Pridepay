@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     LoginScreenText: {
-        flex: 1,
+        flex: 1.3,
         width: '100%',
         alignItems: 'center',
         justifyContent: "center",
@@ -28,29 +28,38 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: "#B4A468"
     },
-    topHalf: {
-        flex: 1,
-        backgroundColor: "#0C4531", // Set the background color of the top half
-    },
-    bottomHalf: {
-        flex: 1,
-    },
-    triangleContainer: {
-        alignItems: 'center',
-        paddingBottom: 20, // Adjust as needed to position the triangle
-    },
-    triangle: {
-        backgroundColor: "#0C4531",
-    },
-    titlePadding: {
-        paddingTop: 10, // Adjust this value for the desired padding
-    },
     title: {
         color: '#B4A468',
         fontSize: 32,
         fontFamily: 'System',
         fontWeight: 'bold',
     },
+        longwoodlogo: {
+        width: 400,
+        height: 300,
+        resizeMode: 'contain',
+    }, button: {
+     flex: 1, // DO NOTTTT mess with this
+        justifyContent: 'center', // Move the button to the bottom
+        alignItems: 'center' // Center horizontally
+    },
+    }
+);
+
+const signInButtonStyles = StyleSheet.create({
+    button: {
+        flex: 1, // DO NOTTTT mess with this
+        justifyContent: 'center', // Move the button to the bottom
+        alignItems: 'center' // Center horizontally
+    },
+    text: {
+        color: "#475569",
+        fontSize: 18,
+        fontFamily: "Roboto",
+        fontWeight: "bold",
+        textAlign: "center", // Center the text horizontally within the button
+    },
+
 });
 
 
