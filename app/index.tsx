@@ -4,6 +4,11 @@ import { Text, View, Image, Pressable, Linking } from "react-native";
 import styles from "../components/styles";
 import signInButtonStyles from "../components/styles";
 import LoginBanner from "../assets/LoginBanner.svg";
+import {
+    GoogleSignin,
+    GoogleSigninButton,
+    statusCodes,
+} from '@react-native-google-signin/google-signin';
 
 const WelcomeScreen = () => {
     const navigation = useRouter();
