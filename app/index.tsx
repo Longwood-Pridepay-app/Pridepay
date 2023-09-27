@@ -1,12 +1,27 @@
 import React from 'react';
 import { Stack, useRouter } from "expo-router";
-import {Text, View, Image, Pressable } from "react-native";
+import { Text, View, Image, Pressable, Linking } from "react-native";
 import styles from "../components/styles";
 import signInButtonStyles from "../components/styles";
 import LoginBanner from "../assets/LoginBanner.svg";
 
 const WelcomeScreen = () => {
     const navigation = useRouter();
+
+    // Function to open the email app
+const handleEmailUs = () => {
+    const emailAddress = 'biglildev@gmail.com';
+    const subject = 'I have a question, {Name}: {Teacher/Student/Admin}: {Grade/Age}';
+
+    const emailUrl = `mailto:${emailAddress}?subject=${encodeURIComponent(subject)}`;
+
+    console.log('Email URL:', emailUrl);
+
+    Linking.openURL(emailUrl)
+        .then(() => console.log('Email app opened successfully'))
+        .catch(error => console.error('Error opening email app:', error));
+};
+
 
     return (
         <>
@@ -30,10 +45,9 @@ const WelcomeScreen = () => {
                         style={[styles.longwoodlogo, { top: 40 }]}
                     />
                 </View>
-                    {/* the entire bottom half of the screen*/}
+                {/* the entire bottom half of the screen*/}
                 <View style={signInButtonStyles.button}>
-
-                    <Pressable // TODO: Add touch opacity
+                    <Pressable // Sign In With Google button
                         style={{
                             width: '80%', // Set width to 80% of screen width
                             backgroundColor: '#F5F5F5', // Gray background color
@@ -45,7 +59,7 @@ const WelcomeScreen = () => {
                         }}
                         onPress={() => {
                             navigation.push("student/Student_Page");
-                        }}//THIS IS THE BUTTON
+                        }}
                     >
                         {/* Google Icon, to the left of the text */}
                         <Image
@@ -61,18 +75,19 @@ const WelcomeScreen = () => {
                         <Text style={signInButtonStyles.text}>Sign In With Google</Text>
                     </Pressable>
                 </View>
-                        <View //This is the "Need Help? Email Us!" button
-                            style={{
-                                padding: 5, // Padding around the button
-                                flexDirection: 'row', // Make children components align horizontally
-                                justifyContent: 'center', // Center align children horizontally
-                                alignItems: 'center', // Center align children vertically
-                                marginBottom: 40,
-                            }
-                            }>
-                            <Text style={signInButtonStyles.text}>Need Help?</Text>
-                            <Text style={{ ...signInButtonStyles.text, fontWeight: 'bold' }}> Email Us!</Text>
-                    </View>
+                <Pressable // "Need Help? Email Us!" button
+                    onPress={handleEmailUs} // Call the function to open the email app
+                    style={{
+                        padding: 5, // Padding around the button
+                        flexDirection: 'row', // Make children components align horizontally
+                        justifyContent: 'center', // Center align children horizontally
+                        alignItems: 'center', // Center align children vertically
+                        marginBottom: 40,
+                    }}
+                >
+                    <Text style={signInButtonStyles.text}>Need Help?</Text>
+                    <Text style={{ ...signInButtonStyles.text, fontWeight: 'bold' }}> Email Us!</Text>
+                </Pressable>
             </View>
         </>
     );
