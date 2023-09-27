@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack, useRouter } from "expo-router";
-import { Button, Text, TouchableOpacity, View, Image } from "react-native";
+import {Text, View, Image, Pressable } from "react-native";
 import styles from "../components/styles";
 import signInButtonStyles from "../components/styles";
 import LoginBanner from "../assets/LoginBanner.svg";
@@ -33,7 +33,7 @@ const WelcomeScreen = () => {
                     {/* the entire bottom half of the screen*/}
                 <View style={signInButtonStyles.button}>
 
-                    <View
+                    <Pressable // TODO: Add touch opacity
                         style={{
                             width: '80%', // Set width to 80% of screen width
                             backgroundColor: '#F5F5F5', // Gray background color
@@ -42,7 +42,10 @@ const WelcomeScreen = () => {
                             flexDirection: 'row', // Make children components align horizontally
                             justifyContent: 'center', // Center align children horizontally
                             alignItems: 'center', // Center align children vertically
-                        }} //THIS IS THE BUTTON
+                        }}
+                        onPress={() => {
+                            navigation.push("student/Student_Page");
+                        }}//THIS IS THE BUTTON
                     >
                         {/* Google Icon, to the left of the text */}
                         <Image
@@ -54,9 +57,9 @@ const WelcomeScreen = () => {
                             }}
                         />
 
-                        {/* Text to the right of the google icon */}
+                        {/* Text to the right of the Google icon */}
                         <Text style={signInButtonStyles.text}>Sign In With Google</Text>
-                    </View>
+                    </Pressable>
                 </View>
                         <View //This is the "Need Help? Email Us!" button
                             style={{
