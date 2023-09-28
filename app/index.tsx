@@ -4,31 +4,52 @@ import { Text, View, Image, Pressable, Linking } from "react-native";
 import styles from "../components/styles";
 import signInButtonStyles from "../components/styles";
 import LoginBanner from "../assets/LoginBanner.svg";
-import {
-    GoogleSignin,
-    GoogleSigninButton,
-    statusCodes,
-} from '@react-native-google-signin/google-signin';
-
+import * as WebBrowser from 'expo-web-browser';
+import { makeRedirectUri, useAuthRequest } from 'expo-auth-session';
 const WelcomeScreen = () => {
     const navigation = useRouter();
 
     // Function to open the email app
-const handleEmailUs = () => {
-    const emailAddress = 'biglildev@gmail.com';
-    const subject = 'I have a question, {Name}: {Teacher/Student/Admin}: {Grade/Age}';
+    const handleEmailUs = () => {
+        const emailAddress = 'biglildev@gmail.com';
+        const subject = 'I have a question, {Name}: {Teacher/Student/Admin}: {Grade/Age}';
 
-    const emailUrl = `mailto:${emailAddress}?subject=${encodeURIComponent(subject)}`;
+        const emailUrl = `mailto:${emailAddress}?subject=${encodeURIComponent(subject)}`;
 
-    console.log('Email URL:', emailUrl);
+        console.log('Email URL:', emailUrl);
 
-    Linking.openURL(emailUrl)
-        .then(() => console.log('Email app opened successfully'))
-        .catch(error => console.error('Error opening email app:', error));
-};
+        Linking.openURL(emailUrl)
+            .then(() => console.log('Email app opened successfully'))
+            .catch(error => console.error('Error opening email app:', error));
+    };
+    const YOUR_CLIENT_ID = "24556241572-a2aje2q49jideas0u627rbvab62vnkah.apps.googleusercontent.com"
+    const YOUR_REDIRECT_URI = "https://longwood-pridepay.firebaseapp.com/__/auth/handler"
 
 
-    return (
+    const handleGoogleSignIn = async () => {
+        try {
+            const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${YOUR_CLIENT_ID}&redirect_uri=${YOUR_REDIRECT_URI}&scope=https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile&access_type=offline&state=1234_purpleGoogle&prompt=consent`;
+
+            const { type, params } = await WebBrowser.openAuthSessionAsync(
+                authUrl
+            );
+
+            if (type === 'success') {
+                // Handle the successful login, e.g., exchange the authorization code for an access token.
+                console.log('Google OAuth success', params);
+            } else {
+                // Handle errors or cancellation.
+                console.log('Google OAuth failed', type);
+            }
+        } catch (error) {
+            console.error('Error during Google OAuth', error);
+        }
+    };
+
+
+
+
+        return (
         <>
             <View style={styles.container}>
                 <Stack.Screen
@@ -63,7 +84,7 @@ const handleEmailUs = () => {
                             alignItems: 'center', // Center align children vertically
                         }}
                         onPress={() => {
-                            navigation.push("student/Student_Page");
+                            handleGoogleSignIn()
                         }}
                     >
                         {/* Google Icon, to the left of the text */}
