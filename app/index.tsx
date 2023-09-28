@@ -4,8 +4,9 @@ import { Text, View, Image, Pressable, Linking } from "react-native";
 import styles from "../components/styles";
 import signInButtonStyles from "../components/styles";
 import LoginBanner from "../assets/LoginBanner.svg";
-import * as WebBrowser from 'expo-web-browser';
-import { makeRedirectUri, useAuthRequest } from 'expo-auth-session';
+import * as AuthSession from 'expo-auth-session';
+import { startAsync } from 'expo-auth-session';
+
 const WelcomeScreen = () => {
     const navigation = useRouter();
 
@@ -26,27 +27,54 @@ const WelcomeScreen = () => {
     const YOUR_REDIRECT_URI = "https://longwood-pridepay.firebaseapp.com/__/auth/handler"
 
 
+    const googleConfig = {
+        issuer: 'https://accounts.google.com',
+        clientId: YOUR_CLIENT_ID,
+        redirectUrl: YOUR_REDIRECT_URI,
+        scopes: ['openid', 'profile', 'email'],
+    };
+
     const handleGoogleSignIn = async () => {
         try {
-            const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${YOUR_CLIENT_ID}&redirect_uri=${YOUR_REDIRECT_URI}&scope=https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile&access_type=offline&state=1234_purpleGoogle&prompt=consent`;
+            const result = await AuthSession.startAsync(googleConfig);
 
-            const { type, params } = await WebBrowser.openAuthSessionAsync(
-                authUrl
-            );
+            if (result.type === 'success') {
+                // Handle the successful login
+                console.log('Google OAuth success', result);
 
-            if (type === 'success') {
-                // Handle the successful login, e.g., exchange the authorization code for an access token.
-                console.log('Google OAuth success', params);
+                // Extract the user's email from the response
+                const { id_token } = result.params;
+                const decodedToken = await decodeIdToken(id_token);
+
+                // Check the email domain and redirect accordingly
+                const email = decodedToken.email;
+                if (email.endsWith('@gmail.com')) {
+                    // Redirect to TeacherPage
+                    navigation.push('teacher/Teacher_Page');
+                } else if (email.endsWith('@students.longwoodschools.org')) {
+                    // Redirect to StudentPage
+                    navigation.push('student/Student_Page');
+                } else {
+                    // Handle other email domains or show an error message
+                    console.error('Unsupported email domain:', email);
+                }
             } else {
                 // Handle errors or cancellation.
-                console.log('Google OAuth failed', type);
+                console.log('Google OAuth failed', result.type);
             }
         } catch (error) {
             console.error('Error during Google OAuth', error);
         }
     };
 
+// Function to decode the id_token to get user information
+    const decodeIdToken = async (idToken: any) => {
+        const decodedToken = await fetch(
+            `https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${idToken}`
+        ).then((response) => response.json());
 
+        return decodedToken;
+    };
 
 
         return (
