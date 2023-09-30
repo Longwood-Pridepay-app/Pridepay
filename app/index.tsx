@@ -1,18 +1,22 @@
+
 import React from 'react';
 import { Stack, useRouter } from "expo-router";
 import { StyleSheet, View } from "react-native";
 import Svg, { Path } from 'react-native-svg';
 import styles from "../components/styles";
 
+
 const WelcomeScreen = () => {
     const navigation = useRouter();
 
     return (
+
         <View style={styles.container}>
             <Stack.Screen
                 options={{
                     title: "Pridepay",
                     headerStyle: {
+
                         backgroundColor: "#0C4531",
                     },
                     headerTintColor: "#B4A468",
@@ -29,8 +33,8 @@ const WelcomeScreen = () => {
             {/* The second half of the screen in white */}
             <View style={styles.bottomHalf}></View>
         </View>
+
     );
 };
 
 export default WelcomeScreen;
-

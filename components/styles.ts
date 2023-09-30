@@ -4,6 +4,7 @@ const styles = StyleSheet.create({
     text: {
         fontFamily: "SF Pro Text", // set the font family to SF Pro Text
     },
+
     container: {
         flex: 1,
         backgroundColor: 'white',
@@ -33,6 +34,4 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
-
-
 export default styles;
