@@ -6,7 +6,10 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+
     "scheme": "pridepay",
+
+
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -15,6 +18,7 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+
     "web": {
       "favicon": "./assets/favicon.png"
     },
@@ -64,4 +68,3 @@
     }
   }
 }
-

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Stack, useRouter } from "expo-router";
 import { Text, View, Image, Pressable, Linking } from "react-native";
@@ -154,6 +155,7 @@ webClientId: "24556241572-a2aje2q49jideas0u627rbvab62vnkah.apps.googleuserconten
                     <Text style={{ ...signInButtonStyles.text, fontWeight: 'bold' }}> Email Us!</Text>
                 </Pressable>
             </View>
+
         </>
     );
 };
