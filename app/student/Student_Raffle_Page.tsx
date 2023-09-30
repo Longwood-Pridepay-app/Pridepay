@@ -16,12 +16,12 @@ const Student_Raffle_Page = () => {
                 }}
             />
             <View style={styles.LoginScreenText}>
-                <Text style={styles.containerTest}>Home</Text>
+                <Text style={styles.containerTest}>Raffles</Text>
             </View>
             <Banner
                 style={styles.svgtest}
                 width={"100%"}
-                height={'40%'}
+                height={'25%'}
                 preserveAspectRatio={"none"}
             ></Banner>
             <View>
