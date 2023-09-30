@@ -6,8 +6,8 @@ import {Stack} from "expo-router";
 import Student_Navbar from '../../components/Student_Navbar';
 
 
-const Student_Page = () => {
-    const [activeTab, setActiveTab] = useState('home');
+const Student_Store_Page = () => {
+    const [activeTab, setActiveTab] = useState('store');
     return (
         <View style={styles.container}>
             <Stack.Screen
@@ -34,4 +34,4 @@ const Student_Page = () => {
     );
 };
 
-export default Student_Page;
+export default Student_Store_Page;

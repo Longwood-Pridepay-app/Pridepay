@@ -1,16 +1,37 @@
-import { Tabs } from 'expo-router/tabs';
-export default function AppLayout() {
+import {Image, Text, View} from "react-native";
+import React, {useState} from "react";
+import styles from "../../components/styles";
+import Banner from "../../assets/banner2.svg";
+import {Stack} from "expo-router";
+import Student_Navbar from '../../components/Student_Navbar';
+
+
+const Student_Raffle_Page = () => {
+    const [activeTab, setActiveTab] = useState('raffle');
     return (
-        <Tabs>
-            <Tabs.Screen
-                // Name of the route to hide.
-                name="index"
+        <View style={styles.container}>
+            <Stack.Screen
                 options={{
-                    // This tab will no longer show up in the tab bar.
-                    // href: null,
-                    href: "Student_Page"
+                    headerShown: false,
                 }}
             />
-        </Tabs>
+            <View style={styles.LoginScreenText}>
+                <Text style={styles.containerTest}>Home</Text>
+            </View>
+            <Banner
+                style={styles.svgtest}
+                width={"100%"}
+                height={'40%'}
+                preserveAspectRatio={"none"}
+            ></Banner>
+            <View>
+                <Student_Navbar
+                    activeTab={activeTab}
+                    setActiveTab={setActiveTab}
+                />
+            </View>
+        </View>
     );
-}
+};
+
+export default Student_Raffle_Page;
