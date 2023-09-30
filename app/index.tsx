@@ -33,7 +33,7 @@ webClientId: "24556241572-a2aje2q49jideas0u627rbvab62vnkah.apps.googleuserconten
             const userInfo = JSON.parse(user);
             const email = userInfo.email;
             if(email.endsWith("@gmail.com")) {
-                navigation.replace("teacher/Teacher_Page");
+                navigation.replace("student/Student_Page"/*"teacher/Teacher_Page"*/);
             } else if(email.endsWith("@students.longwoodschools.org")) {
                 navigation.replace("student/Student_Page");
             }
