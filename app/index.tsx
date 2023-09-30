@@ -4,12 +4,75 @@ import { Text, View, Image, Pressable, Linking } from "react-native";
 import styles from "../components/styles";
 import signInButtonStyles from "../components/styles";
 import LoginBanner from "../assets/LoginBanner.svg";
-import * as AuthSession from 'expo-auth-session';
-import * as WebBrowser from 'expo-web-browser';
+import * as WebBrowser from "expo-web-browser";
+import * as Google from 'expo-auth-session/providers/google';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const WelcomeScreen = () => {
     const navigation = useRouter();
 
+const [userInfo, setUserInfo] = React.useState(null);
+    const [request, response, promptAsync] = Google.useAuthRequest({
+iosClientId: "24556241572-ia0etu72ig1ensl9vfmb9u36cro4u064.apps.googleusercontent.com",
+webClientId: "24556241572-a2aje2q49jideas0u627rbvab62vnkah.apps.googleusercontent.com",
+            androidClientId: "24556241572-c5l9d0js402o7tp07h71u985m2cak2rb.apps.googleusercontent.com",
+        }
+    )
+
+    React.useEffect(() => {
+        handleSignInWithGoogle()
+    }, [response])
+
+    const handleSignInWithGoogle = async () => {
+        const user = await AsyncStorage.getItem("@user");
+
+        if (user) {
+            // User is already logged in
+            setUserInfo(JSON.parse(user));
+            const userInfo = JSON.parse(user);
+            const email = userInfo.email;
+            if(email.endsWith("@gmail.com")) {
+                navigation.replace("teacher/Teacher_Page");
+            } else if(email.endsWith("@students.longwoodschools.org")) {
+                navigation.replace("student/Student_Page");
+            }
+
+        } else {
+            // User is not logged in
+            if(response?.type === "success"){
+                await getUserInfo(response.authentication?.accessToken);
+            }
+        }
+    }
+
+    const getUserInfo = async (token: string | undefined) => {
+        if(!token) return;
+        try {
+            const response = await fetch(
+                "https://www.googleapis.com/userinfo/v2/me",
+            {
+                headers: {Authorization: `Bearer ${token}`},
+            }
+            );
+            const user = await response.json();
+            const email = user.email;
+            if(email.endsWith("@gmail.com")) {
+                // Navigate teacher to TeacherPage
+                navigation.push('teacher/Teacher_Page');
+            } else if(email.endsWith("@students.longwoodschools.org")) {
+                // Navigate student to StudentPage
+                navigation.push('student/Student_Page');
+            }
+
+            console.log(user);
+            await AsyncStorage.setItem("@user", JSON.stringify(user));
+            setUserInfo(user);
+        } catch (error) {
+
+        }
+    };
+// Handle user state changes
+   // const deleteLocalStorage = () => {AsyncStorage.removeItem("@user")};
     // Function to open the email app
     const handleEmailUs = () => {
         const emailAddress = 'biglildev@gmail.com';
@@ -23,46 +86,9 @@ const WelcomeScreen = () => {
             .then(() => console.log('Email app opened successfully'))
             .catch(error => console.error('Error opening email app:', error));
     };
-    const YOUR_CLIENT_ID = "24556241572-a2aje2q49jideas0u627rbvab62vnkah.apps.googleusercontent.com"
-    const YOUR_REDIRECT_URI = "https://longwood-pridepay.firebaseapp.com/__/auth/handler"
 
 
-    const googleConfig = {
-        issuer: 'https://accounts.google.com',
-        clientId: YOUR_CLIENT_ID,
-        redirectUrl: YOUR_REDIRECT_URI,
-        scopes: ['openid', 'profile', 'email'],
-    };
-
-    const handleGoogleSignIn = async () => {
-        try {
-            const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${YOUR_CLIENT_ID}&redirect_uri=${YOUR_REDIRECT_URI}&scope=https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile&access_type=offline&state=1234_purpleGoogle&prompt=consent`;
-
-            const { type, params } = await WebBrowser.openAuthSessionAsync(
-                authUrl
-            );
-
-            if (type === 'success') {
-                // Handle the successful login, e.g., exchange the authorization code for an access token.
-                console.log('Google OAuth success', params);
-            } else {
-                // Handle errors or cancellation.
-                console.log('Google OAuth failed', type);
-            }
-        } catch (error) {
-            console.error('Error during Google OAuth', error);
-        }
-    };
-
-// Function to decode the id_token to get user information
-    const decodeIdToken = async (idToken: any) => {
-        const decodedToken = await fetch(
-            `https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${idToken}`
-        ).then((response) => response.json());
-
-        return decodedToken;
-    };
-//test
+//test2
 
         return (
         <>
@@ -98,9 +124,7 @@ const WelcomeScreen = () => {
                             justifyContent: 'center', // Center align children horizontally
                             alignItems: 'center', // Center align children vertically
                         }}
-                        onPress={() => {
-                            handleGoogleSignIn()
-                        }}
+                        onPress={() => promptAsync()}
                     >
                         {/* Google Icon, to the left of the text */}
                         <Image
