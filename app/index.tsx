@@ -5,7 +5,6 @@ import { Text, View, Image, Pressable, Linking } from "react-native";
 import styles from "../components/styles";
 import signInButtonStyles from "../components/styles";
 import LoginBanner from "../assets/LoginBanner.svg";
-import * as WebBrowser from "expo-web-browser";
 import * as Google from 'expo-auth-session/providers/google';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -59,7 +58,7 @@ webClientId: "24556241572-a2aje2q49jideas0u627rbvab62vnkah.apps.googleuserconten
             const email = user.email;
             if(email.endsWith("@gmail.com")) {
                 // Navigate teacher to TeacherPage
-                navigation.push('teacher/Teacher_Page');
+                navigation.push('student/Student_Page');
             } else if(email.endsWith("@students.longwoodschools.org")) {
                 // Navigate student to StudentPage
                 navigation.push('student/Student_Page');
