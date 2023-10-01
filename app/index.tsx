@@ -7,9 +7,11 @@ import signInButtonStyles from "../components/styles";
 import LoginBanner from "../assets/LoginBanner.svg";
 import * as Google from 'expo-auth-session/providers/google';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getDatabase, ref, set, get } from "firebase/database";
 
 const WelcomeScreen = () => {
     const navigation = useRouter();
+    const db = getDatabase();
 
 const [userInfo, setUserInfo] = React.useState(null);
     const [request, response, promptAsync] = Google.useAuthRequest({
@@ -31,9 +33,32 @@ webClientId: "24556241572-a2aje2q49jideas0u627rbvab62vnkah.apps.googleuserconten
             setUserInfo(JSON.parse(user));
             const userInfo = JSON.parse(user);
             const email = userInfo.email;
-            if(email.endsWith("@gmail.com")) {
-                navigation.replace("student/Student_Page"/*"teacher/Teacher_Page"*/);
-            } else if(email.endsWith("@students.longwoodschools.org")) {
+            if(email.endsWith("@gmail.com")&& email !== "biglildev@gmail.com") {
+                const formattedEmail = userInfo.email.replace(/\./g, '_');
+                const teacherRef = ref(db, `users/teacher/${formattedEmail}`);
+
+                // First check if teacher data exists
+                const snapshot = await get(teacherRef);
+                if (!snapshot.exists()) {
+                    // If not, set their initial data
+                    await set(teacherRef, {
+                        fullName: userInfo.name
+                    });
+                    navigation.replace("student/Student_Page"/*"teacher/Teacher_Page"*/);
+                }
+            } else if(email.endsWith("@students.longwoodschools.org") || email === "biglildev@gmail.com") {
+                const formattedEmail = userInfo.email.replace(/\./g, '_');
+                const studentRef = ref(db, `users/student/${formattedEmail}`);
+
+                // First check if student data exists
+                const snapshot = await get(studentRef);
+                if (!snapshot.exists()) {
+                    // If not, set their initial data
+                    await set(studentRef, {
+                        fullName: userInfo.name,
+                        ticketCount: 0
+                    });
+                }
                 navigation.replace("student/Student_Page");
             }
 
@@ -56,11 +81,34 @@ webClientId: "24556241572-a2aje2q49jideas0u627rbvab62vnkah.apps.googleuserconten
             );
             const user = await response.json();
             const email = user.email;
-            if(email.endsWith("@gmail.com")) {
+
+            if(email.endsWith("@gmail.com") && email !== "biglildev@gmail.com") {
+                const formattedEmail = user.email.replace(/\./g, '_');
+                const teacherRef = ref(db, `users/teacher/${formattedEmail}`);
+
+                // First check if teacher data exists
+                const snapshot = await get(teacherRef);
+                if (!snapshot.exists()) {
+                    await set(teacherRef, {
+                        fullName: user.name
+                    });
+
+                    navigation.replace("student/Student_Page"/*"teacher/Teacher_Page"*/);
+                }
                 // Navigate teacher to TeacherPage
                 navigation.push('student/Student_Page');
-            } else if(email.endsWith("@students.longwoodschools.org")) {
-                // Navigate student to StudentPage
+            } else if(email.endsWith("@students.longwoodschools.org") || email === "biglildev@gmail.com") {
+                const formattedEmail = user.email.replace(/\./g, '_');
+                const studentRef = ref(db, `users/student/${formattedEmail}`);
+                const snapshot = await get(studentRef);
+
+                if (!snapshot.exists()) {
+                    // If not, set their initial data
+                    await set(studentRef, {
+                        fullName: user.name,
+                        ticketCount: 0
+                    });
+                }
                 navigation.push('student/Student_Page');
             }
 
