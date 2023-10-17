@@ -1,71 +1,93 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-    text: {
-        fontFamily: "SF Pro Text", // set the font family to SF Pro Text
-    },
-    container: {
-        flex: 1,
-        backgroundColor: 'white',
-        width: '100%',
-    },
-    topRow: {
-        zIndex: 2,
-        paddingTop: 50,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 28
-    },
-    navbar: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0
-    },
-    homeText: {
-        color: '#B4A468',
-        fontSize: 20,
-        fontFamily: 'System',
-        fontWeight: 'bold',
-        textAlign: 'center',
-        flex: 1
-    },
-    LoginScreenText: {
-        zIndex: 2,
-        flex: 1.3,
-        width: '100%',
-        alignItems: 'center',
-        justifyContent: "center",
-    },
-    svgtest:{
-        position: 'absolute',
-        zIndex: 1,
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    containerTest:{
-        fontSize: 32,
-        fontFamily: 'System',
-        fontWeight: 'bold',
-        color: "#B4A468"
-    },
-    title: {
-        color: '#B4A468',
-        fontSize: 32,
-        fontFamily: 'System',
-        fontWeight: 'bold',
-    },
+        text: {
+            fontFamily: "SF Pro Text", // set the font family to SF Pro Text
+        },
+        container: {
+            flex: 1,
+            backgroundColor: 'white',
+            width: '100%',
+        },
+        topRow: {
+            zIndex: 2,
+            paddingTop: 50,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingHorizontal: 28
+        },
+        navbar: {
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0
+        },
+        homeText: {
+            color: '#B4A468',
+            fontSize: 20,
+            fontFamily: 'System',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            flex: 1
+        },
+        LoginScreenText: {
+            zIndex: 2,
+            flex: 1.3,
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: "center",
+        },
+        svgtest: {
+            position: 'absolute',
+            zIndex: 1,
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        containerTest: {
+            fontSize: 32,
+            fontFamily: 'System',
+            fontWeight: 'bold',
+            color: "#B4A468"
+        },
+        title: {
+            color: '#B4A468',
+            fontSize: 32,
+            fontFamily: 'System',
+            fontWeight: 'bold',
+        },
         longwoodlogo: {
-        width: 400,
-        height: 300,
-        resizeMode: 'contain',
-    }, button: {
-     flex: 1, // DO NOTTTT mess with this
-        justifyContent: 'center', // Move the button to the bottom
-        alignItems: 'center' // Center horizontally
-    },
+            width: 400,
+            height: 300,
+            resizeMode: 'contain',
+        }, button: {
+            flex: 1, // DO NOTTTT mess with this
+            justifyContent: 'center', // Move the button to the bottom
+            alignItems: 'center' // Center horizontally
+        },
+        Active: {
+            color: '#0C4531',
+            fontSize: 18,
+            fontFamily: 'system',
+            fontWeight: "500"
+        },
+        Viewall: {
+            color: '#0C4531',
+            fontSize: 16,
+            fontFamily: 'system',
+            fontWeight: "500"
+        },
+        studentHomeScroll1: {
+            marginTop: 250,
+            marginBottom: 150
+        },
+        studentHomeSubtitles: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingHorizontal: 16
+
+        },
     }
 );
 StyleSheet.create({
@@ -88,7 +110,7 @@ StyleSheet.create({
         width: '80%',
         padding: 10,
         alignItems: 'center'
-    }
+    },
 
 });
 export default styles;

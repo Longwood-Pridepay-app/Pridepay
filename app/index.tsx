@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Stack, useRouter } from "expo-router";
 import { Text, View, Image, Pressable, Linking } from "react-native";
@@ -13,110 +12,97 @@ const WelcomeScreen = () => {
     const navigation = useRouter();
     const db = getDatabase();
 
-const [userInfo, setUserInfo] = React.useState(null);
+    const [userInfo, setUserInfo] = React.useState(null);
+
     const [request, response, promptAsync] = Google.useAuthRequest({
-iosClientId: "24556241572-ia0etu72ig1ensl9vfmb9u36cro4u064.apps.googleusercontent.com",
-webClientId: "24556241572-a2aje2q49jideas0u627rbvab62vnkah.apps.googleusercontent.com",
-            androidClientId: "24556241572-c5l9d0js402o7tp07h71u985m2cak2rb.apps.googleusercontent.com",
-        }
-    )
+        iosClientId: "24556241572-ia0etu72ig1ensl9vfmb9u36cro4u064.apps.googleusercontent.com",
+        webClientId: "24556241572-a2aje2q49jideas0u627rbvab62vnkah.apps.googleusercontent.com",
+        androidClientId: "24556241572-c5l9d0js402o7tp07h71u985m2cak2rb.apps.googleusercontent.com",
+    });
 
     React.useEffect(() => {
         handleSignInWithGoogle()
-    }, [response])
+            .then(() => {
+                // Success!
+            })
+            .catch(error => {
+                // Handle error
+            });
+    }, [response]);
 
     const handleSignInWithGoogle = async () => {
         const user = await AsyncStorage.getItem("@user");
 
         if (user) {
-            // User is already logged in
+            // User already logged in
             setUserInfo(JSON.parse(user));
-            const userInfo = JSON.parse(user);
-            const email = userInfo.email;
-            if(email.endsWith("@gmail.com")&& email !== "biglildev@gmail.com") {
-                const formattedEmail = userInfo.email.replace(/\./g, '_');
-                const teacherRef = ref(db, `users/teacher/${formattedEmail}`);
-
-                // First check if teacher data exists
-                const snapshot = await get(teacherRef);
-                if (!snapshot.exists()) {
-                    // If not, set their initial data
-                    await set(teacherRef, {
-                        fullName: userInfo.name
-                    });
-                    navigation.replace("student/Student_Page"/*"teacher/Teacher_Page"*/);
-                }
-            } else if(email.endsWith("@students.longwoodschools.org") || email === "biglildev@gmail.com") {
-                const formattedEmail = userInfo.email.replace(/\./g, '_');
-                const studentRef = ref(db, `users/student/${formattedEmail}`);
-
-                // First check if student data exists
-                const snapshot = await get(studentRef);
-                if (!snapshot.exists()) {
-                    // If not, set their initial data
-                    await set(studentRef, {
-                        fullName: userInfo.name,
-                        ticketCount: 0
-                    });
-                }
-                navigation.replace("student/Student_Page");
-            }
-
-        } else {
-            // User is not logged in
-            if(response?.type === "success"){
-                await getUserInfo(response.authentication?.accessToken);
-            }
+            handleExistingUser(JSON.parse(user));
+        } else if (response?.type === "success") {
+            await getUserInfo(response.authentication?.accessToken);
         }
-    }
+    };
 
-    const getUserInfo = async (token: string | undefined) => {
-        if(!token) return;
+    const getUserInfo = async (token) => {
+        if (!token) return;
+
         try {
-            const response = await fetch(
-                "https://www.googleapis.com/userinfo/v2/me",
-            {
-                headers: {Authorization: `Bearer ${token}`},
-            }
-            );
+            const response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
             const user = await response.json();
-            const email = user.email;
-
-            if(email.endsWith("@gmail.com") && email !== "biglildev@gmail.com") {
-                const formattedEmail = user.email.replace(/\./g, '_');
-                const teacherRef = ref(db, `users/teacher/${formattedEmail}`);
-
-                // First check if teacher data exists
-                const snapshot = await get(teacherRef);
-                if (!snapshot.exists()) {
-                    await set(teacherRef, {
-                        fullName: user.name
-                    });
-
-                    navigation.replace("student/Student_Page"/*"teacher/Teacher_Page"*/);
-                }
-                // Navigate teacher to TeacherPage
-                navigation.push('student/Student_Page');
-            } else if(email.endsWith("@students.longwoodschools.org") || email === "biglildev@gmail.com") {
-                const formattedEmail = user.email.replace(/\./g, '_');
-                const studentRef = ref(db, `users/student/${formattedEmail}`);
-                const snapshot = await get(studentRef);
-
-                if (!snapshot.exists()) {
-                    // If not, set their initial data
-                    await set(studentRef, {
-                        fullName: user.name,
-                        ticketCount: 0
-                    });
-                }
-                navigation.push('student/Student_Page');
-            }
 
             console.log(user);
             await AsyncStorage.setItem("@user", JSON.stringify(user));
             setUserInfo(user);
-        } catch (error) {
 
+            handleNewUser(user);
+
+        } catch (error) {
+            // Handle error
+        }
+    };
+
+    const handleExistingUser = (user) => {
+        const email = user.email;
+
+        if (email.endsWith("@gmail.com") && email !== "biglildev@gmail.com") {
+            navigation.replace("student/Student_Page");
+        } else if (email.endsWith("@students.longwoodschools.org") || email === "biglildev@gmail.com") {
+            navigation.replace("student/Student_Page");
+        }
+    };
+
+    const handleNewUser = async (user) => {
+        const email = user.email;
+
+        if (email.endsWith("@gmail.com") && email !== "biglildev@gmail.com") {
+            const formattedEmail = user.email.replace(/\./g, '_');
+            const teacherRef = ref(db, `users/teacher/${formattedEmail}`);
+
+            // First check if teacher data exists
+            const snapshot = await get(teacherRef);
+            if (!snapshot.exists()) {
+                await set(teacherRef, {
+                    fullName: user.name
+                });
+            }
+
+            navigation.replace("student/Student_Page");
+
+        } else if (email.endsWith("@students.longwoodschools.org") || email === "biglildev@gmail.com") {
+            const formattedEmail = user.email.replace(/\./g, '_');
+            const studentRef = ref(db, `users/student/${formattedEmail}`);
+
+            const snapshot = await get(studentRef);
+            if (!snapshot.exists()) {
+                await set(studentRef, {
+                    fullName: user.name,
+                    ticketCount: 0
+                });
+            }
+
+            navigation.replace("student/Student_Page"/*"teacher/Teacher_Page"*/);
         }
     };
 // Handle user state changes
