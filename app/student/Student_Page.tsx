@@ -1,14 +1,37 @@
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import styles from "../../components/styles";
 import Banner from "../../assets/banner2.svg";
 import { Stack, useRouter } from "expo-router";
 import Student_Navbar from '../../components/Student_Navbar';
 import { Feather } from '@expo/vector-icons';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Student_Page = () => {
+    const [userInfo, setUserInfo] = useState(null)
     const navigation = useRouter();
     const [activeTab, setActiveTab] = useState('home');
+    useEffect(() => {
+        const getUserInfo = async () => {
+            try {
+                const userInfoStr = await AsyncStorage.getItem('@user')
+                if (typeof userInfoStr === "string") {
+                    setUserInfo(JSON.parse(userInfoStr))
+                }
+            } catch(e) {
+                // error reading value
+            }
+        }
+        getUserInfo()
+    }, [])
+
+    const getGreeting = () => {
+        const hrs = new Date().getHours()
+        if(hrs < 12) return 'Good Morning'
+        else if (hrs >= 12 && hrs <= 17) return 'Good Afternoon'
+        else return 'Good Evening'
+    }
+    // @ts-ignore
     return (
         <View style={styles.container}>
             <Stack.Screen
@@ -16,6 +39,7 @@ const Student_Page = () => {
                     headerShown: false,
                 }}
             />
+
             <View style={styles.topRow}>
                 <View>
                     <TouchableOpacity onPress={() => {
@@ -28,12 +52,16 @@ const Student_Page = () => {
                 <Text style={styles.homeText}>Home</Text>
                 <View style={{ flex: 0.068 }}></View>
             </View>
+            <View style={styles.Greeting}>
+                <Text style={styles.greetingText}>{getGreeting()}</Text>
+            </View>
             <Banner
                 style={styles.svgtest}
                 width={"100%"}
                 height={'40%'}
                 preserveAspectRatio={"none"}
-            ></Banner>
+            >
+            </Banner>
             <View style={{marginTop: 250, marginBottom: 150}}>
                 <ScrollView style={{ height: '100%' }}>
                     <View style={{paddingBottom: 11, paddingTop: 11}}>

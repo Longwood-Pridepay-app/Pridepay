@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
             fontFamily: 'System',
             fontWeight: 'bold',
         },
-        longwoodlogo: {
+        longwoodLogo: {
             width: 400,
             height: 300,
             resizeMode: 'contain',
@@ -86,8 +86,23 @@ const styles = StyleSheet.create({
             flexDirection: 'row',
             justifyContent: 'space-between',
             paddingHorizontal: 16
-
         },
+        greetingText: {
+            color: '#B4A468',
+            fontSize: 28,
+            fontFamily: 'System',
+            fontWeight: 'medium',
+            textAlign: 'left',
+        },
+        Greeting: {
+            zIndex: 2,
+            paddingTop: 30,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingHorizontal: 28
+
+    },
     }
 );
 StyleSheet.create({

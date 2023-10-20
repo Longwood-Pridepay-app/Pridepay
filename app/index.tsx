@@ -143,7 +143,7 @@ const WelcomeScreen = () => {
                     <Text style={styles.containerTest}>PridePay</Text>
                     <Image
                         source={require('../assets/longwoodlogo/longwoodlogo3x.png')}
-                        style={[styles.longwoodlogo, { top: 40 }]}
+                        style={[styles.longwoodLogo, { top: 40 }]}
                     />
                 </View>
                 {/* the entire bottom half of the screen*/}
