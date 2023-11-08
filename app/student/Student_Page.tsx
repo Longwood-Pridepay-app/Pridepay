@@ -81,7 +81,10 @@ const Student_Page =  () => {
                 <Text style={styles.nameText}>Hi, {userInfo?.name}</Text>
             </View>
             <View style={styles.totalBucksHeading}>
-                <Text style={styles.totalBucksText}>{ticketCount}</Text>
+                <Text style={styles.totalBucksText}>
+                    {ticketCount}
+                    <Text style={styles.smallText}>BR3</Text>
+                </Text>
             </View>
             <Banner
                 style={styles.svgtest}

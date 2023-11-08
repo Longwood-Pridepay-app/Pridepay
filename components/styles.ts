@@ -141,6 +141,10 @@ const styles = StyleSheet.create({
         paddingTop: 40,
         paddingLeft: -20,
     },
+    smallText: {
+        fontSize: 20,
+        color: '#B4A468',
+    },
 
     }
 );
