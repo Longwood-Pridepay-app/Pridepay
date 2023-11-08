@@ -6,24 +6,40 @@ import { Stack, useRouter } from "expo-router";
 import Student_Navbar from '../../components/Student_Navbar';
 import { Feather } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {getDatabase, ref, onValue} from "firebase/database";
 
-const Student_Page = () => {
+const Student_Page =  () => {
     const [userInfo, setUserInfo] = useState(null)
     const navigation = useRouter();
     const [activeTab, setActiveTab] = useState('home');
-    useEffect(() => {
-        const getUserInfo = async () => {
-            try {
-                const userInfoStr = await AsyncStorage.getItem('@user')
-                if (typeof userInfoStr === "string") {
-                    setUserInfo(JSON.parse(userInfoStr))
-                }
-            } catch(e) {
-                // error reading value
+    const [ticketCount, setTicketCount] = useState(null);
+    const db = getDatabase();
+
+
+    const getTicketCount = (email: string) => {
+        const formattedEmail = email.replace(/\./g, '_');
+        const studentRef = ref(db, `users/student/${formattedEmail}/ticketCount`);
+
+        onValue(studentRef, (snapshot) => {
+            if(snapshot.exists()) {
+                setTicketCount(snapshot.val());
+            } else {
+                setTicketCount(0); // default if data doesn't exist
             }
+        });
+    }
+
+    const getUserInfo = async () => {
+        try {
+            const userInfoStr = await AsyncStorage.getItem('@user')
+            if (typeof userInfoStr === "string") {
+                setUserInfo(JSON.parse(userInfoStr))
+                getTicketCount(JSON.parse(userInfoStr).email)
+            }
+        } catch(e) {
+            // error reading value
         }
-        getUserInfo()
-    }, [])
+    }
 
     const getGreeting = () => {
         const hrs = new Date().getHours()
@@ -31,7 +47,13 @@ const Student_Page = () => {
         else if (hrs >= 12 && hrs <= 17) return 'Good Afternoon'
         else return 'Good Evening'
     }
+
     // @ts-ignore
+
+    useEffect(() => {
+        getUserInfo()
+    }, [])
+
     return (
         <View style={styles.container}>
             <Stack.Screen
@@ -55,6 +77,12 @@ const Student_Page = () => {
             <View style={styles.Greeting}>
                 <Text style={styles.greetingText}>{getGreeting()}</Text>
             </View>
+            <View style={styles.Greeting}>
+                <Text style={styles.nameText}>Hi, {userInfo?.name}</Text>
+            </View>
+            <View style={styles.totalBucksHeading}>
+                <Text style={styles.totalBucksText}>{ticketCount}</Text>
+            </View>
             <Banner
                 style={styles.svgtest}
                 width={"100%"}
@@ -62,7 +90,7 @@ const Student_Page = () => {
                 preserveAspectRatio={"none"}
             >
             </Banner>
-            <View style={{marginTop: 250, marginBottom: 150}}>
+            <View style={{marginTop: 130, marginBottom: 150}}>
                 <ScrollView style={{ height: '100%' }}>
                     <View style={{paddingBottom: 11, paddingTop: 11}}>
                         <View style={styles.studentHomeSubtitles}>

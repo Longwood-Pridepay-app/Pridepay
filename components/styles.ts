@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
             color: '#B4A468',
             fontSize: 28,
             fontFamily: 'System',
-            fontWeight: 'medium',
+            fontWeight: 'normal',
             textAlign: 'left',
         },
         Greeting: {
@@ -100,9 +100,48 @@ const styles = StyleSheet.create({
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            paddingHorizontal: 28
-
+            paddingHorizontal: 28,
+            marginBottom: -25,
+        },
+         nameText: {
+            color: '#B4A468',
+            fontSize: 16,
+            fontFamily: 'System',
+            fontWeight: 'normal',
+            textAlign: 'left',
+            paddingLeft: 10
+        },
+    totalBucksHeading: {
+        zIndex: 2,
+        paddingTop: 30,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 28,
+        marginBottom: -25,
     },
+    totalBucksText: {
+        color: '#B4A468',
+        fontSize: 60,
+        fontFamily: 'System',
+        fontWeight: 'bold',
+        justifyContent: 'center',
+        textAlign: 'center',
+        alignItems: 'center',
+        flex: 1,
+        paddingTop: 10,
+    },
+    totalBucksText2: {
+        color: '#B4A468',
+        fontSize: 20,
+        fontFamily: 'System',
+        fontWeight: 'regular',
+        textAlign: 'center',
+        flex: 1,
+        paddingTop: 40,
+        paddingLeft: -20,
+    },
+
     }
 );
 StyleSheet.create({
