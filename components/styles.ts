@@ -70,7 +70,8 @@ const styles = StyleSheet.create({
             color: '#0C4531',
             fontSize: 18,
             fontFamily: 'system',
-            fontWeight: "500"
+            fontWeight: "500",
+            marginBottom: 11,
         },
         Viewall: {
             color: '#0C4531',
@@ -145,6 +146,18 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: '#B4A468',
     },
+    cardStyle: {
+        borderRadius: 16,
+        backgroundColor: '#F5F5F5',
+        padding: 15,
+        marginHorizontal: 8,
+        marginBottom: 11
+    },
+    classCardTitle: {
+        color: '#0C4531',
+        fontFamily: 'System',
+        fontWeight: "500",
+    }
 
     }
 );

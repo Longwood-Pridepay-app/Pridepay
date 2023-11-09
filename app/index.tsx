@@ -18,16 +18,12 @@ const WelcomeScreen = () => {
         iosClientId: "24556241572-ia0etu72ig1ensl9vfmb9u36cro4u064.apps.googleusercontent.com",
         webClientId: "24556241572-a2aje2q49jideas0u627rbvab62vnkah.apps.googleusercontent.com",
         androidClientId: "24556241572-c5l9d0js402o7tp07h71u985m2cak2rb.apps.googleusercontent.com",
-    });
+        scopes: ['https://www.googleapis.com/auth/classroom.courses.readonly', 'https://www.googleapis.com/auth/classroom.rosters.readonly'],    });
 
     React.useEffect(() => {
-        handleSignInWithGoogle()
-            .then(() => {
-                // Success!
-            })
-            .catch(error => {
-                // Handle error
-            });
+        if (response?.type === "success") {
+            handleSignInWithGoogle();
+        }
     }, [response]);
 
     const handleSignInWithGoogle = async () => {
@@ -38,9 +34,13 @@ const WelcomeScreen = () => {
             setUserInfo(JSON.parse(user));
             handleExistingUser(JSON.parse(user));
         } else if (response?.type === "success") {
+            await AsyncStorage.setItem("@access_token", response.authentication?.accessToken);
             await getUserInfo(response.authentication?.accessToken);
+        } else {
+            await promptAsync(); // Prompt the user for authentication
         }
     };
+
 
     const getUserInfo = async (token) => {
         if (!token) return;
@@ -67,7 +67,7 @@ const WelcomeScreen = () => {
         const email = user.email;
 
         if (email.endsWith("@gmail.com") && email !== "biglildev@gmail.com") {
-            navigation.replace("student/Student_Page");
+            navigation.replace("teacher/Teacher_Page");
         } else if (email.endsWith("@students.longwoodschools.org") || email === "biglildev@gmail.com") {
             navigation.replace("student/Student_Page");
         }
@@ -88,7 +88,7 @@ const WelcomeScreen = () => {
                 });
             }
 
-            navigation.replace("student/Student_Page");
+            navigation.replace("teacher/Teacher_Page");
 
         } else if (email.endsWith("@students.longwoodschools.org") || email === "biglildev@gmail.com") {
             const formattedEmail = user.email.replace(/\./g, '_');
@@ -105,8 +105,6 @@ const WelcomeScreen = () => {
             navigation.replace("student/Student_Page"/*"teacher/Teacher_Page"*/);
         }
     };
-// Handle user state changes
-   // const deleteLocalStorage = () => {AsyncStorage.removeItem("@user")};
     // Function to open the email app
     const handleEmailUs = () => {
         const emailAddress = 'biglildev@gmail.com';
