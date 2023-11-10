@@ -6,7 +6,7 @@ import { Stack, useRouter } from "expo-router";
 import Student_Navbar from '../../components/Student_Navbar';
 import { Feather } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase } from "firebase/database";
 import axios from 'axios';
 
 const Teacher_Page = () => {
@@ -121,7 +121,7 @@ const Teacher_Page = () => {
                             <Text style={styles.Active}>My Classes</Text>
                         </View>
                         {classes.map((classroom, index) => (
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={() => navigation.push('Teacher_Class_Page', {classroom})}>
                             <View key={index} style={styles.cardStyle}>
                                 <Text style={styles.classCardTitle}>{classroom?.name}</Text>
                                 <Text style={styles.classCardTitle}>{classroom?.studentCount} students</Text>
