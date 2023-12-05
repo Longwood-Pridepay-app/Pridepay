@@ -110,7 +110,7 @@ const Student_Page =  () => {
                                 <Text style={{ color: 'white', fontSize: 30, }}>+</Text>
                             </View>
 
-                            <Text style={{ fontSize: 16, color: '#B09778', fontWeight: 'bold', paddingTop: 11, paddingRight: 6, textAlign: "center" }}>
+                            <Text style={{ fontSize: 16, color: '#B09778', fontWeight: 'bold', paddingTop: 11, paddingRight: 2, textAlign: "center" }}>
                                 Enter{'\n'}Raffle
                             </Text>
                         </TouchableOpacity>

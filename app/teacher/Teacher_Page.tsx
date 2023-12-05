@@ -2,7 +2,7 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import styles from "../../components/styles";
 import Banner from "../../assets/banner2.svg";
-import { Stack, useRouter } from "expo-router";
+import {router, Stack, useRouter} from "expo-router";
 import Student_Navbar from '../../components/Student_Navbar';
 import { Feather } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -15,6 +15,7 @@ const Teacher_Page = () => {
     const [activeTab, setActiveTab] = useState('home');
     const db = getDatabase();
     const [classes, setClasses] = useState([]);
+    const [classroom, setClassroom] = useState(null);
 
     const getUserInfo = async () => {
         try {
@@ -121,7 +122,14 @@ const Teacher_Page = () => {
                             <Text style={styles.Active}>My Classes</Text>
                         </View>
                         {classes.map((classroom, index) => (
-                            <TouchableOpacity onPress={() => navigation.push('Teacher_Class_Page', {classroom})}>
+                            <TouchableOpacity onPress={() => {
+                                console.log("Classroom data:", classroom);
+                                setClassroom(classroom);
+                                router.push({
+                                    pathname: 'teacher/Teacher_Class_Page',
+                                    params: { classroom: JSON.stringify(classroom) }
+                                });
+                            }}>
                             <View key={index} style={styles.cardStyle}>
                                 <Text style={styles.classCardTitle}>{classroom?.name}</Text>
                                 <Text style={styles.classCardTitle}>{classroom?.studentCount} students</Text>

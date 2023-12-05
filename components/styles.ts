@@ -157,7 +157,33 @@ const styles = StyleSheet.create({
         color: '#0C4531',
         fontFamily: 'System',
         fontWeight: "500",
-    }
+    },
+    classCardSubTitle: {
+        color: '#0C4531',
+        fontFamily: 'System',
+        fontWeight: "500",
+        fontSize: 10,
+    },
+    ticketCountContainer: {
+        position: 'absolute',
+        right: 10,
+        top: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    iconContainer: {
+        marginLeft: 10,
+    },
+    ticketSign:{
+        color: '#0C4531',
+        fontSize: 8,
+        paddingTop: 4,
+        paddingLeft: 1,
+    },
+
+
 
     }
 );
