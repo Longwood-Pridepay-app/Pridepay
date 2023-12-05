@@ -93,7 +93,7 @@ const Student_Page =  () => {
                 preserveAspectRatio={"none"}
             >
             </Banner>
-            <View style={{marginTop: 130, marginBottom: 150}}>
+            <View style={{marginTop: 110, marginBottom: 150}}>
                 <ScrollView style={{ height: '100%' }}>
                     <View style={{paddingBottom: 11, paddingTop: 11}}>
                         <View style={styles.studentHomeSubtitles}>
@@ -106,13 +106,15 @@ const Student_Page =  () => {
                             }}
                             style={{ alignItems: 'flex-end', justifyContent: 'flex-end', paddingRight: 25 }}
                         >
+                            <View>
                             <View style={{ backgroundColor: '#B09778', width: 50, height: 50, borderRadius: 65, justifyContent: 'center', alignItems: 'center' }}>
                                 <Text style={{ color: 'white', fontSize: 30, }}>+</Text>
                             </View>
 
-                            <Text style={{ fontSize: 16, color: '#B09778', fontWeight: 'bold', paddingTop: 11, paddingRight: 2, textAlign: "center" }}>
+                            <Text style={{ fontSize: 16, color: '#B09778', fontWeight: 'bold', paddingTop: 11, paddingRight: 0, textAlign: "center" }}>
                                 Enter{'\n'}Raffle
                             </Text>
+                    </View>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.studentHomeSubtitles}>
@@ -121,9 +123,9 @@ const Student_Page =  () => {
                             onPress={() => {
                                 // Handle the View All button press
                             }}
-                            style={{padding: 8, borderRadius: 8 }}
+                            style={{paddingTop: 3, paddingRight: 8, borderRadius: 8 }}
                         >
-                            <Text style={styles.Viewall}>View All</Text>
+                            <Text style={styles.viewAll}>View All</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>

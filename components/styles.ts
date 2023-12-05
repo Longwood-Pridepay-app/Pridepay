@@ -71,13 +71,15 @@ const styles = StyleSheet.create({
             fontSize: 18,
             fontFamily: 'system',
             fontWeight: "500",
-            marginBottom: 11,
+            paddingTop: 1
         },
-        Viewall: {
+        viewAll: {
             color: '#0C4531',
             fontSize: 16,
             fontFamily: 'system',
-            fontWeight: "500"
+            fontWeight: "500",
+            alignItems: 'center',
+
         },
         studentHomeScroll1: {
             marginTop: 250,
@@ -181,6 +183,24 @@ const styles = StyleSheet.create({
         fontSize: 8,
         paddingTop: 4,
         paddingLeft: 1,
+    },
+    className:{
+        fontSize: 24,
+        fontWeight: 'bold',
+        paddingTop: 48,
+        paddingLeft: 11,
+        fontFamily: 'System',
+        color: '#0C4531',
+        paddingBottom: 11
+    },
+    giveAll:{
+        fontSize: 24,
+        fontWeight: 'bold',
+        paddingTop: 56,
+        paddingRight: 11,
+        fontFamily: 'System',
+        paddingBottom: 11,
+        color: '#B4A468',
     },
 
 
