@@ -3,7 +3,7 @@ Created for Longwood Central School District and by Longwood Students!
 
 Created by Hussain Iqbal and Jadon (idk ur last Name)
 
-This app is essentially a digitalization of the currency system BR3 in Longwood Central School district. It allows for teacher and students to send and recieve BR3 bucks with ease. It even allows for purchases through the school store!
+This app is essentially a digitization of the currency system BR3 in Longwood Central School district. It allows for teacher and students to send and receive BR3 bucks with ease. It even allows for purchases through the school store!
 
 
 ## Current application Layout
