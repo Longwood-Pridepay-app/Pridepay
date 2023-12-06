@@ -96,7 +96,7 @@ const Teacher_Page = () => {
                         setActiveTab('home');
                         navigation.push('student/Student_Settings');
                     }}>
-                        <Feather name="settings" size={22} color={"#B09778"} />
+                        <Feather name="settings" size={22} color={"#B4A468"} />
                     </TouchableOpacity>
                 </View>
                 <Text style={styles.homeText}>Home</Text>

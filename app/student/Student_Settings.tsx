@@ -24,7 +24,7 @@ const Student_Settings = () => {
             <View style={styles.topRow}>
                 <View>
                     <TouchableOpacity onPress={() => navigation.back()}>
-                        <Ionicons name={"chevron-back"} size={26} color={"#B4A468"}/>
+                        <Ionicons name={"chevron-back"} size={30} color={"#B4A468"}/>
                     </TouchableOpacity>
                 </View>
                 <Text style={styles.homeText}>Settings</Text>

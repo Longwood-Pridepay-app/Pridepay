@@ -151,9 +151,17 @@ const styles = StyleSheet.create({
     cardStyle: {
         borderRadius: 16,
         backgroundColor: '#F5F5F5',
-        padding: 15,
+        padding: 12,
         marginHorizontal: 8,
-        marginBottom: 11
+        marginTop: 7,
+        marginBottom: 6,
+        position: 'relative',
+    },
+    studentCardStyle: {
+        borderRadius: 16,
+        backgroundColor: '#F5F5F5',
+        padding: 6,
+        marginHorizontal: 8,
     },
     classCardTitle: {
         color: '#0C4531',
@@ -194,13 +202,43 @@ const styles = StyleSheet.create({
         paddingBottom: 11
     },
     giveAll:{
+        fontSize: 12,
+        fontWeight: 'bold',
+        fontFamily: 'System',
+        color: '#B4A468',
+        paddingVertical: 4,
+        paddingHorizontal: 8,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "flex-end"
+
+    },
+    select:{
+        fontSize: 13,
+        fontWeight: 'medium',
+        fontFamily: 'System',
+        color: '#0C4531',
+        paddingVertical: 4,
+        paddingHorizontal: 8,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    selectCard:{
+        borderRadius: 8,
+        backgroundColor: '#F5F5F5',
         fontSize: 24,
         fontWeight: 'bold',
-        paddingTop: 56,
-        paddingRight: 11,
         fontFamily: 'System',
-        paddingBottom: 11,
         color: '#B4A468',
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    ticketBar: {
+        paddingBottom: 11,
+        flexDirection: "row",
+        justifyContent: "space-evenly",
     },
 
 
