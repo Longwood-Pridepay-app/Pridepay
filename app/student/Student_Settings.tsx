@@ -13,7 +13,6 @@ const Student_Settings = () => {
         navigation.replace("/");
     }
 
-    const [activeTab, setActiveTab] = useState('home');
     return (
         <View style={styles.container}>
             <Stack.Screen
