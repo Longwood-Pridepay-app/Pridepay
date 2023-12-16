@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 import styles from "../../components/styles";
 import Banner from "../../assets/banner2.svg";
 import {router, Stack, useRouter} from "expo-router";
-import Student_Navbar from '../../components/Student_Navbar';
 import { Feather } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getDatabase } from "firebase/database";
 import axios from 'axios';
+import Teacher_Navbar from "../../components/Teacher_Navbar";
 
 const Teacher_Page = () => {
     const [userInfo, setUserInfo] = useState(null);
@@ -140,7 +140,7 @@ const Teacher_Page = () => {
                 </ScrollView>
             </View>
             <View style={styles.navbar}>
-                <Student_Navbar
+                <Teacher_Navbar
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}
                 />

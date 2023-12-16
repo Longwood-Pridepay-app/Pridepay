@@ -242,7 +242,6 @@ const styles = StyleSheet.create({
     },
 
 
-
     }
 );
 StyleSheet.create({

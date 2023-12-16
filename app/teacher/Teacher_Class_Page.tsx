@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {View, Text, ScrollView, TouchableOpacity, Alert, Animated} from 'react-native';
+import {View, Text, ScrollView, TouchableOpacity, Alert, Animated, RefreshControl} from 'react-native';
 import axios from 'axios';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {router, Stack, useLocalSearchParams} from "expo-router";
@@ -7,91 +7,164 @@ import styles from "../../components/styles";
 import Banner from "../../assets/banner2.svg";
 import {Ionicons} from "@expo/vector-icons";
 import {getDatabase, ref, get, update} from "firebase/database";
+import {serverTimestamp, getFirestore, collection, addDoc} from "firebase/firestore";
 
 const ClassDetailsPage = () => {
     const params = useLocalSearchParams();
     const classroom = JSON.parse(params.classroom as string);
     const [students, setStudents] = useState([]);
+    const [userInfo, setUserInfo] = useState(null);
     const [ticketCounts, setTicketCounts] = useState({});
     const [selectedStudents, setSelectedStudents] = useState({});
+    const [refreshing, setRefreshing] = useState(false);
 
-    useEffect(() => {
-        const fetchStudents = async () => {
-            const access_token = await AsyncStorage.getItem("@access_token");
-
-            if (access_token) {
-                // Fetch the students
-                axios.get(`https://classroom.googleapis.com/v1/courses/${classroom.id}/students`, {
-                    headers: { Authorization: `Bearer ${access_token}` }
-                })
-                    .then((res) => {
-                        const students = res.data.students.map(student => ({
-                            ...student,
-                            animation: new Animated.Value(0),
-                        }));
-                        setStudents(students);
-                        students.forEach(student => {
-                            fetchTicketCount(student.profile.emailAddress);
-                        });
-                    })
-                    .catch((error) => {
-                        console.error("Error fetching students:", error);
-                    });
+    const getUserInfo = async () => {
+        try {
+            const userInfoStr = await AsyncStorage.getItem('@user');
+            if (typeof userInfoStr === "string") {
+                setUserInfo(JSON.parse(userInfoStr));
             }
-        };
-        const fetchTicketCount = async (email: string) => {
-            const db = getDatabase();
-            const formattedEmail = email.replace(/\./g, '_');
-            const ticketCountRef = ref(db, `users/student/${formattedEmail}/ticketCount`);
-            console.log(formattedEmail)
-            await get(ticketCountRef)
-                .then((snapshot) => {
-                    if (snapshot.exists()) {
-                        setTicketCounts(prevState => ({...prevState, [email]: snapshot.val()}));
-                    } else {
-                        console.log("No data available");
-                    }
+        } catch (e) {
+            // error reading value
+        }
+    };
+    const fetchStudents = async () => {
+        getUserInfo()
+        const access_token = await AsyncStorage.getItem("@access_token");
+        if (access_token) {
+            // Fetch the students
+            axios.get(`https://classroom.googleapis.com/v1/courses/${classroom.id}/students`, {
+                headers: { Authorization: `Bearer ${access_token}` }
+            })
+                .then((res) => {
+                    const students = res.data.students.map(student => ({
+                        ...student,
+                        animation: new Animated.Value(0),
+                    }));
+                    setStudents(students);
+                    students.forEach(student => {
+                        fetchTicketCount(student.profile.emailAddress);
+                    });
                 })
                 .catch((error) => {
-                    console.error(error);
+                    console.error("Error fetching students:", error);
                 });
-        };
-        // Fetch the students every 15 seconds
-        const intervalId = setInterval(() => {
-            fetchStudents();
-        }, 8000);
-
-        // Clear the interval when the component is unmounted
-        return () => {
-            clearInterval(intervalId);
-        };
+        }
+    };
+    const fetchTicketCount = async (email: string) => {
+        const db = getDatabase();
+        const formattedEmail = email.replace(/\./g, '_');
+        const ticketCountRef = ref(db, `users/student/${formattedEmail}/ticketCount`);
+        console.log(formattedEmail)
+        await get(ticketCountRef)
+            .then((snapshot) => {
+                if (snapshot.exists()) {
+                    setTicketCounts(prevState => ({...prevState, [email]: snapshot.val()}));
+                } else {
+                    console.log("No data available");
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+    useEffect(() => {
+        getUserInfo()
     }, [classroom]);
+    useEffect(() => {
+        fetchStudents()
+    }, []);
+
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        fetchStudents().then(() => setRefreshing(false));
+    }, []);
 
     const selectAllStudents = () => {
         const newSelectedStudents = {};
         students.forEach(student => {
             newSelectedStudents[student.profile.id] = true;
-            Animated.timing(student.animation, {
-                toValue: 1,
-                duration: 500,
-                useNativeDriver: true,
-            }).start();
         });
         setSelectedStudents(newSelectedStudents);
+        console.log(newSelectedStudents)
     };
 
     const deselectAllStudents = () => {
         const newSelectedStudents = {};
         students.forEach(student => {
             newSelectedStudents[student.profile.id] = false;
-            Animated.timing(student.animation, {
-                toValue: 0,
-                duration: 500,
-                useNativeDriver: true,
-            }).start();
         });
         setSelectedStudents(newSelectedStudents);
+        console.log(newSelectedStudents)
     };
+    const giveAllStudentsOneTicket = () => {
+        Alert.alert(
+            "Confirmation",
+            "Are you sure you want to give all students one ticket?",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                },
+                {
+                    text: "OK",
+                    onPress: async () => {
+                        const dbRt = getDatabase(); // Realtime DB
+                        const dbFs = getFirestore(); // Firestore DB
+                        const teacherEmail = userInfo?.email
+                        const transactionsCollection = collection(dbFs, 'teachers', teacherEmail, 'transactions');
+
+                        // Array to store all student emails
+                        const studentEmails = [];
+
+                        for (const student of students) {
+                            const formattedEmail = student.profile.emailAddress.replace(/\./g, '_');
+                            const ticketCountRef = ref(dbRt, `users/student/${formattedEmail}`);
+
+                            // Get the current ticket count
+                            const snapshot = await get(ticketCountRef);
+                            let currentCount = snapshot.exists() ? snapshot.val() : 0;
+
+                            // If the current count is an object, convert it to a number
+                            if (typeof currentCount === 'object') {
+                                currentCount = Number(currentCount.ticketCount)
+                            }
+
+                            // Update the ticket count
+                            const newCount = currentCount + 1;
+                            await update(ticketCountRef, { 'ticketCount': newCount });
+
+                            // Update the local state
+                            setTicketCounts(prevState => ({...prevState, [student.profile.emailAddress]: newCount}));
+
+                            // Add student email to the array
+                            studentEmails.push(student.profile.emailAddress);
+                        }
+
+                        // Store the transaction data in Firestore
+                        await addDoc(transactionsCollection, {
+                            date: serverTimestamp(),
+                            students: studentEmails,
+                            teacher: teacherEmail,
+                            transaction: {
+                                type: 'Give All +1',
+                                details: 'Each student listed above was given 1 BR3 Buck each',
+                            }
+                        });
+                    }
+                },
+            ],
+            { cancelable: false }
+        );
+    };
+
+
+
+
+
+
 
     return (
         <View style={styles.container}>
@@ -132,15 +205,23 @@ const ClassDetailsPage = () => {
                     <Text style={styles.select}>De-Select All</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.selectCard}>
+                <TouchableOpacity style={styles.selectCard} onPress={giveAllStudentsOneTicket}>
                     <Text style={styles.giveAll}>Give All +1</Text>
                 </TouchableOpacity>
             </View>
 
-            <ScrollView>
+            <ScrollView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
+            >
                 {students && students.map((student, index) => (
                     <View key={index} style={styles.cardStyle}>
-                        <Animated.View style={[styles.studentCardStyle, { zIndex: 1 }]}>
+
+                        <View style={[styles.studentCardStyle, {zIndex: 1}]}>
                             <Text style={styles.classCardTitle}>{student.profile.name.fullName}</Text>
                             <Text style={styles.classCardSubTitle}>{student.profile.emailAddress ? student.profile.emailAddress : 'Email not available'}</Text>
                             <View style={styles.ticketCountContainer}>
@@ -150,9 +231,11 @@ const ClassDetailsPage = () => {
                                     style={styles.iconContainer}
                                     onPress={() => {
                                         Alert.prompt(
+
                                             'Enter BR3 Amount',
                                             `How much BR3 would you like to give ${student.profile.name.fullName}?`,
                                             [
+
                                                 {
                                                     text: 'Cancel',
                                                     onPress: () => console.log('Cancel Pressed'),
@@ -227,11 +310,8 @@ const ClassDetailsPage = () => {
                                     <Ionicons name="add-circle-outline" size={30} color="#B4A468" />
                                 </TouchableOpacity>
                             </View>
-                        </Animated.View>
+                        </View>
 
-                        <Animated.View style={[styles.secondCardStyle, { zIndex: 0, opacity: student.animation }]}>
-                            {/* Content of the second card... */}
-                        </Animated.View>
                     </View>
                 ))}
             </ScrollView>
