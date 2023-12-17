@@ -3,6 +3,7 @@
     "name": "Pridepay",
     "slug": "Pridepay",
     "version": "1.0.0",
+    "owner": "bigli1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

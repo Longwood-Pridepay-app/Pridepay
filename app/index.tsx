@@ -19,7 +19,6 @@ const WelcomeScreen = () => {
         webClientId: "24556241572-a2aje2q49jideas0u627rbvab62vnkah.apps.googleusercontent.com",
         androidClientId: "24556241572-c5l9d0js402o7tp07h71u985m2cak2rb.apps.googleusercontent.com",
         scopes: ['https://www.googleapis.com/auth/classroom.courses.readonly', 'https://www.googleapis.com/auth/classroom.rosters.readonly', 'https://www.googleapis.com/auth/classroom.profile.emails'],
-        redirectUri: 'https://longwood-pridepay.firebaseapp.com/__/auth/handler',
     });
 
     React.useEffect(() => {
