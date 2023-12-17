@@ -1,9 +1,9 @@
 {
   "expo": {
     "name": "Pridepay",
-    "slug": "Pridepay",
+    "slug": "pridepay",
     "version": "1.0.0",
-    "owner": "bigli1",
+    "owner": "longwoodcsd",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -64,7 +64,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "850c0a2d-bac8-4e08-8c54-e74d2b950a8a"
+        "projectId": "133ac388-3234-4100-b69b-d74e0b1c31e7"
       }
     }
   }
