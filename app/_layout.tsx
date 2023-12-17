@@ -18,9 +18,9 @@ export default function HomeLayout() {
                 options={{
 
                     title: "Pridepay",
-
                 }}
             />
         </Stack>
     );
+
 }
