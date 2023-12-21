@@ -89,6 +89,5 @@ StyleSheet.create({
         padding: 10,
         alignItems: 'center'
     }
-
 });
 export default styles;
