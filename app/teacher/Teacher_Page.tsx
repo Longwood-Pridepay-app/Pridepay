@@ -1,18 +1,24 @@
 import { View } from "react-native";
 import React from "react";
 import styles from "../../components/styles";
-import LoginBanner from "../../assets/LoginBanner.svg"
+import Banner from "../../assets/banner2.svg"
+import {Stack} from "expo-router";
 
 
 const Teacher_Page = () => {
     return (
         <View style={styles.container}>
-            <LoginBanner
+            <Stack.Screen
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Banner
                 style={styles.svgtest}
                 width={"100%"}
-                height={'62%'}
+                height={'30%'}
                 preserveAspectRatio={"none"}
-            ></LoginBanner>
+            ></Banner>
         </View>
     );
 };

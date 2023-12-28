@@ -5,7 +5,6 @@ import { Text, View, Image, Pressable, Linking } from "react-native";
 import styles from "../components/styles";
 import signInButtonStyles from "../components/styles";
 import LoginBanner from "../assets/LoginBanner.svg";
-import * as WebBrowser from "expo-web-browser";
 import * as Google from 'expo-auth-session/providers/google';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -19,6 +18,13 @@ webClientId: "24556241572-a2aje2q49jideas0u627rbvab62vnkah.apps.googleuserconten
         }
     )
 
+const [userInfo, setUserInfo] = React.useState(null);
+    const [request, response, promptAsync] = Google.useAuthRequest({
+iosClientId: "24556241572-ia0etu72ig1ensl9vfmb9u36cro4u064.apps.googleusercontent.com",
+webClientId: "24556241572-a2aje2q49jideas0u627rbvab62vnkah.apps.googleusercontent.com",
+            androidClientId: "24556241572-c5l9d0js402o7tp07h71u985m2cak2rb.apps.googleusercontent.com",
+        }
+    )
     React.useEffect(() => {
         handleSignInWithGoogle()
     }, [response])
@@ -32,7 +38,7 @@ webClientId: "24556241572-a2aje2q49jideas0u627rbvab62vnkah.apps.googleuserconten
             const userInfo = JSON.parse(user);
             const email = userInfo.email;
             if(email.endsWith("@gmail.com")) {
-                navigation.replace("teacher/Teacher_Page");
+                navigation.replace("student/Student_Page"/*"teacher/Teacher_Page"*/);
             } else if(email.endsWith("@students.longwoodschools.org")) {
                 navigation.replace("student/Student_Page");
             }
@@ -58,7 +64,7 @@ webClientId: "24556241572-a2aje2q49jideas0u627rbvab62vnkah.apps.googleuserconten
             const email = user.email;
             if(email.endsWith("@gmail.com")) {
                 // Navigate teacher to TeacherPage
-                navigation.push('teacher/Teacher_Page');
+                navigation.push('student/Student_Page');
             } else if(email.endsWith("@students.longwoodschools.org")) {
                 // Navigate student to StudentPage
                 navigation.push('student/Student_Page');

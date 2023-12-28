@@ -9,7 +9,30 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         width: '100%',
     },
+    topRow: {
+        zIndex: 2,
+        paddingTop: 50,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 28
+    },
+    navbar: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0
+    },
+    homeText: {
+        color: '#B4A468',
+        fontSize: 20,
+        fontFamily: 'System',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        flex: 1
+    },
     LoginScreenText: {
+        zIndex: 2,
         flex: 1.3,
         width: '100%',
         alignItems: 'center',
@@ -17,7 +40,7 @@ const styles = StyleSheet.create({
     },
     svgtest:{
         position: 'absolute',
-        zIndex: -1,
+        zIndex: 1,
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
@@ -45,8 +68,7 @@ const styles = StyleSheet.create({
     },
     }
 );
-
-const signInButtonStyles = StyleSheet.create({
+StyleSheet.create({
     button: {
         flex: 1, // DO NOTTTT mess with this
         justifyContent: 'center', // Move the button to the bottom
@@ -59,6 +81,13 @@ const signInButtonStyles = StyleSheet.create({
         fontWeight: "bold",
         textAlign: "center", // Center the text horizontally within the button
     },
-
+    logoutButton: {
+        backgroundColor: '#F1F5F9',
+        borderRadius: 10,
+        height: '5%',
+        width: '80%',
+        padding: 10,
+        alignItems: 'center'
+    }
 });
 export default styles;
