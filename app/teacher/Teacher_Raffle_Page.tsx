@@ -1,13 +1,12 @@
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {Text,View } from "react-native";
 import React, {useState} from "react";
 import styles from "../../components/styles";
 import Banner from "../../assets/banner2.svg";
-import {router, Stack, useRouter} from "expo-router";
-import { Feather } from '@expo/vector-icons';
+import {Stack, useRouter} from "expo-router";
 import Teacher_Navbar from "../../components/Teacher_Navbar";
 
 const Teacher_Raffle_Page = () => {
-    const navigation = useRouter();
+    // const navigation = useRouter();
     const [activeTab, setActiveTab] = useState('raffle');
 
     return (
@@ -29,13 +28,6 @@ const Teacher_Raffle_Page = () => {
             >
             </Banner>
 
-            /* insert big brain code here
-            *
-            *
-            *
-            *
-            *
-            */
 
             <View style={styles.navbar}>
                 <Teacher_Navbar
