@@ -24,6 +24,7 @@ const Student_Page =  () => {
             if(snapshot.exists()) {
                 setTicketCount(snapshot.val());
             } else {
+                // @ts-ignore
                 setTicketCount(0); // default if data doesn't exist
             }
         });

@@ -50,13 +50,13 @@ const Teacher_Navbar = ({activeTab, setActiveTab}) => {
                 style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
                 onPress={() => {
                     setActiveTab('history');
-                    navigation.replace('teacher/Teacher_History_Page');
+                    navigation.replace('../app/teacher/Teacher_History_Page');
                 }}
             >
                 <MaterialIcons
                     name="receipt"
                     size={25}
-                    color={activeTab === 'store' ? activeColor : inActiveColor}
+                    color={activeTab === 'history' ? activeColor : inActiveColor}
                 />
             </TouchableOpacity>
 
