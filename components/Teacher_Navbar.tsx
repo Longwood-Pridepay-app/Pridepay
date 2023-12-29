@@ -50,7 +50,7 @@ const Teacher_Navbar = ({activeTab, setActiveTab}) => {
                 style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
                 onPress={() => {
                     setActiveTab('history');
-                    navigation.replace('../app/teacher/Teacher_History_Page');
+                    navigation.replace('teacher/Teacher_History_Page');
                 }}
             >
                 <MaterialIcons
