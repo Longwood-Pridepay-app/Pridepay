@@ -81,6 +81,18 @@ const ClassDetailsPage = () => {
         fetchStudents().then(() => setRefreshing(false));
     }, []);
 
+    const toggleStudentSelection = (studentId) => {
+        // Create a copy of the current state
+        let newSelectedStudents = { ...selectedStudents };
+
+        // Inverse current selection status
+        newSelectedStudents[studentId] = !newSelectedStudents[studentId];
+
+        // Update and console log the state
+        setSelectedStudents(newSelectedStudents);
+        console.log(newSelectedStudents)
+    };
+
     const selectAllStudents = () => {
         const newSelectedStudents = {};
         students.forEach(student => {
@@ -98,6 +110,21 @@ const ClassDetailsPage = () => {
         setSelectedStudents(newSelectedStudents);
         console.log(newSelectedStudents)
     };
+
+    const toggleAllStudents = () => {
+        // Check if any students are selected
+        const anySelected = Object.values(selectedStudents).some(value => value);
+
+        // If no students are selected, select all students
+        if (!anySelected) {
+            selectAllStudents();
+        }
+        // If any students are selected, deselect all students
+        else {
+            deselectAllStudents();
+        }
+    };
+
     const giveAllStudentsOneTicket = () => {
         Alert.alert(
             "Confirmation",
@@ -160,6 +187,150 @@ const ClassDetailsPage = () => {
         );
     };
 
+    // const giveSelectedStudentsOneTicket = () => {
+    //     Alert.alert(
+    //         "Confirmation",
+    //         "Are you sure you want to give selected students one ticket?",
+    //         [
+    //             {
+    //                 text: "Cancel",
+    //                 onPress: () => console.log("Cancel Pressed"),
+    //                 style: "cancel"
+    //             },
+    //             {
+    //                 text: "OK",
+    //                 onPress: async () => {
+    //                     const dbRt = getDatabase(); // Realtime DB
+    //                     const dbFs = getFirestore(); // Firestore DB
+    //                     const teacherEmail = userInfo?.email
+    //                     const transactionsCollection = collection(dbFs, 'teachers', teacherEmail, 'transactions');
+    //
+    //                     // Array to store all student emails
+    //                     const studentEmails = [];
+    //
+    //                     // Iterate over the selected students
+    //                     for (const studentId in selectedStudents) {
+    //                         if (selectedStudents[studentId]) {
+    //                             const student = students.find(student => student.profile.id === studentId);
+    //                             const formattedEmail = student.profile.emailAddress.replace(/\./g, '_');
+    //                             const ticketCountRef = ref(dbRt, `users/student/${formattedEmail}`);
+    //
+    //                             // Get the current ticket count
+    //                             const snapshot = await get(ticketCountRef);
+    //                             let currentCount = snapshot.exists() ? snapshot.val() : 0;
+    //
+    //                             // If the current count is an object, convert it to a number
+    //                             if (typeof currentCount === 'object') {
+    //                                 currentCount = Number(currentCount.ticketCount)
+    //                             }
+    //
+    //                             // Update the ticket count
+    //                             const newCount = currentCount + 1;
+    //                             await update(ticketCountRef, { 'ticketCount': newCount });
+    //
+    //                             // Update the local state
+    //                             setTicketCounts(prevState => ({...prevState, [student.profile.emailAddress]: newCount}));
+    //
+    //                             // Add student email to the array
+    //                             studentEmails.push(student.profile.emailAddress);
+    //                         }
+    //                     }
+    //
+    //                     // // Store the transaction data in Firestore
+    //                     // await addDoc(transactionsCollection, {
+    //                     //     date: serverTimestamp(),
+    //                     //     students: studentEmails,
+    //                     //     teacher: teacherEmail,
+    //                     //     transaction: {
+    //                     //         type: 'Give Selected Students +1',
+    //                     //         details: 'Each student listed above was given 1 ticket each',
+    //                     //     }
+    //                     // });
+    //                 }
+    //             },
+    //         ],
+    //         { cancelable: false }
+    //     );
+    // };
+
+    const giveSelectedStudentsTickets = () => {
+
+        // Check if any students are selected
+        const anySelected = Object.values(selectedStudents).some(value => value);
+
+        // If no students are selected, show an alert
+        if (!anySelected) {
+            Alert.alert('No Students Selected', 'Please select at least one student before giving tickets.');
+            return;
+        }
+
+        Alert.prompt(
+            'Enter Ticket Amount',
+            'How many tickets would you like to give the selected students?',
+            [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel'
+                },
+                {
+                    text: 'Confirm',
+                    onPress: async (value) => {
+                        const dbRt = getDatabase(); // Realtime DB
+                        const dbFs = getFirestore(); // Firestore DB
+                        const teacherEmail = userInfo?.email
+                        const transactionsCollection = collection(dbFs, 'teachers', teacherEmail, 'transactions');
+
+                        // Array to store all student emails
+                        const studentEmails = [];
+
+                        // Iterate over the selected students
+                        for (const studentId in selectedStudents) {
+                            if (selectedStudents[studentId]) {
+                                const student = students.find(student => student.profile.id === studentId);
+                                const formattedEmail = student.profile.emailAddress.replace(/\./g, '_');
+                                const ticketCountRef = ref(dbRt, `users/student/${formattedEmail}`);
+
+                                // Get the current ticket count
+                                const snapshot = await get(ticketCountRef);
+                                let currentCount = snapshot.exists() ? snapshot.val() : 0;
+
+                                // If the current count is an object, convert it to a number
+                                if (typeof currentCount === 'object') {
+                                    currentCount = Number(currentCount.ticketCount)
+                                }
+
+                                // Update the ticket count
+                                const newCount = currentCount + Number(value);
+                                await update(ticketCountRef, { 'ticketCount': newCount });
+
+                                // Update the local state
+                                setTicketCounts(prevState => ({...prevState, [student.profile.emailAddress]: newCount}));
+
+                                // Add student email to the array
+                                studentEmails.push(student.profile.emailAddress);
+                            }
+                        }
+
+                        // Store the transaction data in Firestore
+                        await addDoc(transactionsCollection, {
+                            date: serverTimestamp(),
+                            students: studentEmails,
+                            teacher: teacherEmail,
+                            transaction: {
+                                type: 'Give Selected Students',
+                                details: `${value} tickets were given to each student listed above`,
+                            }
+                        });
+                    }
+                },
+            ],
+            'plain-text'
+        );
+    };
+
+
+
 
 
 
@@ -197,16 +368,16 @@ const ClassDetailsPage = () => {
                 </Text>
             </View>
             <View style={styles.ticketBar}>
-                <TouchableOpacity style={styles.selectCard} onPress={selectAllStudents}>
-                    <Text style={styles.select}>Select All</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.selectCard} onPress={deselectAllStudents}>
-                    <Text style={styles.select}>De-Select All</Text>
+                <TouchableOpacity style={styles.selectCard} onPress={toggleAllStudents}>
+                    <Text style={styles.select}>{Object.values(selectedStudents).some(value => value) ? "De-Select All" : "Select All"}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.selectCard} onPress={giveAllStudentsOneTicket}>
                     <Text style={styles.giveAll}>Give All +1</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.selectCard} onPress={giveSelectedStudentsTickets}>
+                    <Text style={styles.giveAll}>Give to selected students</Text>
                 </TouchableOpacity>
             </View>
 
@@ -229,86 +400,96 @@ const ClassDetailsPage = () => {
                                 <Text style={styles.ticketSign}>BR3</Text>
                                 <TouchableOpacity
                                     style={styles.iconContainer}
-                                    onPress={() => {
-                                        Alert.prompt(
-
-                                            'Enter BR3 Amount',
-                                            `How much BR3 would you like to give ${student.profile.name.fullName}?`,
-                                            [
-
-                                                {
-                                                    text: 'Cancel',
-                                                    onPress: () => console.log('Cancel Pressed'),
-                                                    style: 'cancel'
-                                                },
-                                                {
-                                                    text: 'Confirm',
-                                                    onPress: async (value) => {
-                                                        const db = getDatabase();
-                                                        const formattedEmail = student.profile.emailAddress.replace(/\./g, '_');
-                                                        const ticketCountRef = ref(db, `users/student/${formattedEmail}`);
-
-                                                        // Get the current ticket count
-                                                        const snapshot = await get(ticketCountRef);
-                                                        let currentCount = snapshot.exists() ? snapshot.val() : 0;
-
-                                                        // If the current count is an object, convert it to a number
-                                                        if (typeof currentCount === 'object') {
-                                                            currentCount = Number(currentCount.ticketCount)
-                                                        }
-
-                                                        // Check if the value entered is negative
-                                                        if (Number(value) < 0) {
-                                                            Alert.alert('Invalid value entered', 'Cannot send negative amounts');
-                                                            return;
-                                                        }
-
-                                                        // Check if the value entered is greater than 4, if it is then there is an "are you sure" pop-up
-                                                        if (Number(value) > 4) {
-                                                            Alert.alert(
-                                                                'Are you sure?',
-                                                                'The value entered is greater than 4. Are you sure you want to proceed?',
-                                                                [
-                                                                    {
-                                                                        text: 'Cancel',
-                                                                        onPress: () => console.log('Cancel Pressed'),
-                                                                        style: 'cancel'
-                                                                    },
-                                                                    {
-                                                                        text: 'Confirm',
-                                                                        onPress: async () => {
-                                                                            // Update the ticket count
-                                                                            const newCount = currentCount + Number(value);
-                                                                            await update(ticketCountRef, { 'ticketCount': newCount });
-
-                                                                            // Show a success message
-                                                                            Alert.alert(`${value} BR3 bucks have been sent to ${student.profile.name.fullName}. New ticket count: ${newCount}`);
-                                                                        }
-                                                                    },
-                                                                ],
-                                                                { cancelable: false }
-                                                            );
-                                                            return;
-                                                        }
-
-
-                                                        // Update the ticket count
-                                                        const newCount = currentCount + Number(value);
-                                                        await update(ticketCountRef, { 'ticketCount': newCount });
-
-                                                        Alert.alert(`${value} BR3 bucks have been successfully sent to ${student.profile.name.fullName}!`);
-                                                        console.log(`${value} BR3 bucks have been sent to ${student.profile.name.fullName}. New ticket count: ${newCount}`);
-                                                    }
-
-
-                                                },
-                                            ],
-                                            'plain-text'
-                                        );
-                                    }}
+                                    onPress={() => toggleStudentSelection(student.profile.id)}
                                 >
-                                    <Ionicons name="add-circle-outline" size={30} color="#B4A468" />
+                                    {selectedStudents[student.profile.id] ? (
+                                        <Ionicons name="remove-circle-outline" size={30} color="#B4A468" />
+                                    ) : (
+                                        <Ionicons name="add-circle-outline" size={30} color="#B4A468" />
+                                    )}
                                 </TouchableOpacity>
+                                {/*<TouchableOpacity*/}
+                                {/*    style={styles.iconContainer}*/}
+                                {/*    onPress={() => {*/}
+                                {/*        Alert.prompt(*/}
+
+                                {/*            'Enter BR3 Amount',*/}
+                                {/*            `How much BR3 would you like to give ${student.profile.name.fullName}?`,*/}
+                                {/*            [*/}
+
+                                {/*                {*/}
+                                {/*                    text: 'Cancel',*/}
+                                {/*                    onPress: () => console.log('Cancel Pressed'),*/}
+                                {/*                    style: 'cancel'*/}
+                                {/*                },*/}
+                                {/*                {*/}
+                                {/*                    text: 'Confirm',*/}
+                                {/*                    onPress: async (value) => {*/}
+                                {/*                        const db = getDatabase();*/}
+                                {/*                        const formattedEmail = student.profile.emailAddress.replace(/\./g, '_');*/}
+                                {/*                        const ticketCountRef = ref(db, `users/student/${formattedEmail}`);*/}
+
+                                {/*                        // Get the current ticket count*/}
+                                {/*                        const snapshot = await get(ticketCountRef);*/}
+                                {/*                        let currentCount = snapshot.exists() ? snapshot.val() : 0;*/}
+
+                                {/*                        // If the current count is an object, convert it to a number*/}
+                                {/*                        if (typeof currentCount === 'object') {*/}
+                                {/*                            currentCount = Number(currentCount.ticketCount)*/}
+                                {/*                        }*/}
+
+                                {/*                        // Check if the value entered is negative*/}
+                                {/*                        if (Number(value) < 0) {*/}
+                                {/*                            Alert.alert('Invalid value entered', 'Cannot send negative amounts');*/}
+                                {/*                            return;*/}
+                                {/*                        }*/}
+
+                                {/*                        // Check if the value entered is greater than 4, if it is then there is an "are you sure" pop-up*/}
+                                {/*                        if (Number(value) > 4) {*/}
+                                {/*                            Alert.alert(*/}
+                                {/*                                'Are you sure?',*/}
+                                {/*                                'The value entered is greater than 4. Are you sure you want to proceed?',*/}
+                                {/*                                [*/}
+                                {/*                                    {*/}
+                                {/*                                        text: 'Cancel',*/}
+                                {/*                                        onPress: () => console.log('Cancel Pressed'),*/}
+                                {/*                                        style: 'cancel'*/}
+                                {/*                                    },*/}
+                                {/*                                    {*/}
+                                {/*                                        text: 'Confirm',*/}
+                                {/*                                        onPress: async () => {*/}
+                                {/*                                            // Update the ticket count*/}
+                                {/*                                            const newCount = currentCount + Number(value);*/}
+                                {/*                                            await update(ticketCountRef, { 'ticketCount': newCount });*/}
+
+                                {/*                                            // Show a success message*/}
+                                {/*                                            Alert.alert(`${value} BR3 bucks have been sent to ${student.profile.name.fullName}. New ticket count: ${newCount}`);*/}
+                                {/*                                        }*/}
+                                {/*                                    },*/}
+                                {/*                                ],*/}
+                                {/*                                { cancelable: false }*/}
+                                {/*                            );*/}
+                                {/*                            return;*/}
+                                {/*                        }*/}
+
+
+                                {/*                        // Update the ticket count*/}
+                                {/*                        const newCount = currentCount + Number(value);*/}
+                                {/*                        await update(ticketCountRef, { 'ticketCount': newCount });*/}
+
+                                {/*                        Alert.alert(`${value} BR3 bucks have been successfully sent to ${student.profile.name.fullName}!`);*/}
+                                {/*                        console.log(`${value} BR3 bucks have been sent to ${student.profile.name.fullName}. New ticket count: ${newCount}`);*/}
+                                {/*                    }*/}
+
+
+                                {/*                },*/}
+                                {/*            ],*/}
+                                {/*            'plain-text'*/}
+                                {/*        );*/}
+                                {/*    }}*/}
+                                {/*>*/}
+                                {/*    <Ionicons name="add-circle-outline" size={30} color="#B4A468" />*/}
+                                {/*</TouchableOpacity>*/}
                             </View>
                         </View>
 
